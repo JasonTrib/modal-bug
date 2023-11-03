@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useCallback, useState } from 'react';
 import Modal from './Modal';
 
 type ModalComponentProps = {
@@ -12,18 +12,22 @@ const useModal = () => {
     setIsModalOpen(true);
   };
 
-  const closeModal = () => {
+  const closeModal = useCallback(() => {
     setIsModalOpen(false);
-  };
+  }, []);
 
-  const ModalComponent: FC<ModalComponentProps> = ({ children }) => (
-    <Modal isOpen={isModalOpen} onClose={closeModal}>
-      {children}
-    </Modal>
+  const ModalComponent: FC<ModalComponentProps> = useCallback(
+    ({ children }) => (
+      <Modal isOpen={isModalOpen} onClose={closeModal}>
+        {children}
+      </Modal>
+    ),
+    [isModalOpen, closeModal],
   );
 
   return {
     Modal: ModalComponent,
+    isModalOpen,
     openModal,
     closeModal,
   };
